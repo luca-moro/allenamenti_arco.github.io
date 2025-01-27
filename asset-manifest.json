@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/allenamenti_arco.github.io/static/css/main.169c570f.css",
+    "main.js": "/allenamenti_arco.github.io/static/js/main.36855221.js",
+    "static/js/488.2c2c4401.chunk.js": "/allenamenti_arco.github.io/static/js/488.2c2c4401.chunk.js",
+    "static/media/arco.jpg": "/allenamenti_arco.github.io/static/media/arco.f92a678887d8bc597424.jpg",
+    "static/media/logo192.png": "/allenamenti_arco.github.io/static/media/logo192.f6537a298707f39f9a4a.png",
+    "index.html": "/allenamenti_arco.github.io/index.html",
+    "main.169c570f.css.map": "/allenamenti_arco.github.io/static/css/main.169c570f.css.map",
+    "main.36855221.js.map": "/allenamenti_arco.github.io/static/js/main.36855221.js.map",
+    "488.2c2c4401.chunk.js.map": "/allenamenti_arco.github.io/static/js/488.2c2c4401.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.169c570f.css",
+    "static/js/main.36855221.js"
+  ]
+}
