@@ -8,6 +8,7 @@ import React from "react";
 import "./App.css";
 import logo from "./logo192.png"; // Import the logo image
 import arcoImage from "./arco.jpg"
+import Modal from "./Modal"
 
 const firebaseConfig = {
   apiKey: "AIzaSyARiqtsVR7cmX6iU3cD0P7LvvWfp4zv4To",
@@ -44,6 +45,23 @@ async function fetchGiorniDocument() {
     return null;
   }
 }
+
+async function updatePopup(newMessage, newEnabled) {
+  // Reference the specific document you want to update
+  const docRef = doc(db, 'giorni', 'popup_avvisi');
+  const updateData = {
+    enabled: newEnabled,
+    message: newMessage,
+  };
+
+  try {
+    // Update the document with the new data
+    await updateDoc(docRef, updateData);
+    console.log("Document successfully updated!");
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+};
 
 async function updateGiorniDocument(newData) {
   // Reference the specific document you want to update
@@ -207,6 +225,9 @@ function App() {
   const [formAllenatoreInput, setFormAllenatoreInput] = useState("");
   const [weekDates, setWeekDates] = useState({});
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "asc" }); // Sorting state
+  const [message, setMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [showModal, setShowModal] = useState(false); // To track whether to show the modal
 
   // Update the default value of `formInput.turno` based on `activeTab`
   useEffect(() => {
@@ -452,6 +473,54 @@ function App() {
     }
   };
 
+
+  // Load settings from localStorage when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      const docRef = doc(db, 'giorni', 'popup_avvisi');
+
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setMessage(docSnap.data().message);
+        setShowPopup(docSnap.data().enabled);
+
+        // Show popup if enabled
+        if (docSnap.data().enabled && (isLoggedIn || isAdmin)) {
+          setShowModal(true);
+        }
+      } else {
+        console.log("No such document!");
+      }
+
+    };
+
+    fetchData();
+  }, [isLoggedIn, isAdmin]);
+
+
+  // Save settings when inputs change
+  const handleSavePopup = async (e) => {
+    e.preventDefault();
+    try {
+      updatePopup(message, showPopup)
+      alert("Settings saved successfully!");
+
+      // Show popup immediately if enabled
+      if (showPopup) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the modal
+  };
+
+
+
+  // RETURN
   if (!isLoggedIn && !isAdmin) {
     return (
       <div className="login-page">
@@ -475,11 +544,15 @@ function App() {
   else if (isAdmin) {
     return (
       <div className="App" style={{
-        backgroundImage: `url(${arcoImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"}}
+          backgroundImage: `url(${arcoImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed", // Keeps the background fixed
+          minHeight: "100vh", // Ensures it covers the whole viewport
+          }}
         >
         {/* Navbar */}
+        {showModal && <Modal message={message} onClose={handleCloseModal} />}
         <header className="navbar">
           <div className="navbar-left">
             <img src={logo} alt="Logo" className="navbar-logo" />
@@ -490,6 +563,8 @@ function App() {
           </button>
           <nav className={`navbar-menu ${isMenuOpen ? "open" : ""}`}>
             <a href="Segnapunti_10_vole.pdf" download="Segnapunti_10_vole.pdf">Download File Segnapunti</a>
+            <a href="https://docs.google.com/spreadsheets/d/11_P5Tp79USRnDzy4NDw_2u3zsvyeaU33LsEISs46uKs/edit?gid=0#gid=0" target="_blank">Calendario Tecnici</a>
+            <a href="https://docs.google.com/spreadsheets/d/1eO8TQW-4I0wmI7VCpdxiNsQRAAzB5lsx/edit?gid=1333899302#gid=1333899302" target="_blank">File Gare</a>
           </nav>
         </header>
 
@@ -587,7 +662,7 @@ function App() {
 
         {/* Form Section */}
         <section className="form-section">
-          <h2>Prenota allenamento per <strong>{activeTab}</strong></h2>
+          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1>
           <form className="booking-form">
             <select
               value={formInput.turno}
@@ -613,6 +688,7 @@ function App() {
         </section>
 
         <section className="form-section">
+          <h1>Imposta Allenatore per il giorno selezionato</h1>
           <form className="booking-form">
             <input
                 type="text"
@@ -627,6 +703,31 @@ function App() {
           </form>
         </section>
 
+        <section className="form-section">
+          <h1>Attiva/Disattiva popup avvisi</h1>
+          <form className="booking-form">
+            <input
+                type="text"
+                placeholder="Inserisci il messaggio del popup"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+              />
+            <input
+                  type="checkbox"
+                  checked={showPopup}
+                  onChange={(e) => setShowPopup(e.target.checked)}
+                />
+            <span>Attiva popup</span>
+            <button
+              onClick={handleSavePopup}
+              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+            >
+              Salva Popup
+            </button>
+          </form>
+        </section>
+
         {/* Footer */}
         <footer>
           <p>Arcieri Apollo Artemide Valconca</p>
@@ -637,11 +738,15 @@ function App() {
   else {
     return (
       <div className="App" style={{
-        backgroundImage: `url(${arcoImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"}}
+          backgroundImage: `url(${arcoImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed", // Keeps the background fixed
+          minHeight: "100vh", // Ensures it covers the whole viewport
+          }}
         >
         {/* Navbar */}
+        {showModal && <Modal message={message} onClose={handleCloseModal} />}
         <header className="navbar">
           <div className="navbar-left">
             <img src={logo} alt="Logo" className="navbar-logo" />
@@ -718,7 +823,7 @@ function App() {
 
         {/* Form Section */}
         <section className="form-section">
-          <h2>Prenota allenamento per <strong>{activeTab}</strong></h2>
+          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1>
           <form className="booking-form">
             <select
               value={formInput.turno}
