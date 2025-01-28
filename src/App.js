@@ -98,77 +98,81 @@ interface Giorno {
 const initialData = {
 	"Lunedì": {
 		"nome": "Lunedì",
+		"luogo": "Montefiore",
 		"turni": [
 			{
-				"nome": "Primo turno",
-				"posti": 20,
-				"prenotazioni": [
-					{
-						"nome": "tytttt",
-						"turno": "Primo turno"
-					}
-				],
-				"sospeso": false
+				"nome": "Primo Turno",
+				"allenatore": "Mecca",
+				"posti": 10,
+				"prenotazioni": [],
+				"sospeso": false,
+				"riservato": false
 			},
 			{
-				"nome": "Secondo turno",
-				"posti": 10,
-				"prenotazioni": [
-					{
-						"nome": "lucaaaa",
-						"turno": "Secondo Turno"
-					},
-					{
-						"nome": "oooooooo",
-						"turno": "Secondo turno"
-					}
-				],
-				"sospeso": false
+				"nome": "Secondo Turno",
+				"allenatore": "Mecca",
+				"posti": 12,
+				"prenotazioni": [],
+				"sospeso": false,
+				"riservato": false
 			}
 		]
 	},
 	"Mercoledì": {
 		"nome": "Mercoledì",
+		"luogo": "Morciano",
 		"turni": [
 			{
-				"nome": "Primo turno",
+				"nome": "Primo Turno",
+				"allenatore": "Palazzini",
 				"posti": 20,
 				"prenotazioni": [],
-				"sospeso": false
+				"sospeso": false,
+				"riservato": false
 			},
 			{
-				"nome": "Secondo turno",
-				"posti": 20,
+				"nome": "Secondo Turno",
+				"allenatore": "Palazzini",
+				"posti": 12,
 				"prenotazioni": [],
-				"sospeso": false
+				"sospeso": false,
+				"riservato": false
 			}
 		]
 	},
 	"Giovedì": {
 		"nome": "Giovedì",
+		"luogo": "Morciano",
 		"turni": [
 			{
 				"nome": "Turno Unico",
-				"posti": 0,
+				"allenatore": "Ugo",
+				"posti": 9,
 				"prenotazioni": [],
-				"sospeso": false
+				"sospeso": false,
+				"riservato": false
 			}
 		]
 	},
 	"Sabato": {
 		"nome": "Sabato",
+		"luogo": "Morciano",
 		"turni": [
 			{
-				"nome": "Primo turno",
+				"nome": "Primo Turno",
+				"allenatore": "Palazzini ",
 				"posti": 20,
 				"prenotazioni": [],
-				"sospeso": false
+				"sospeso": false,
+				"riservato": false
 			},
 			{
-				"nome": "Secondo turno",
+				"nome": "Secondo Turno",
+				"allenatore": "Palazzini ",
 				"posti": 20,
 				"prenotazioni": [],
-				"sospeso": false
+				"sospeso": false,
+				"riservato": false
 			}
 		]
 	}
@@ -223,6 +227,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('Lunedì');
   const [formInput, setFormInput] = useState({turno: "Primo Turno", nome: "" });
   const [formAllenatoreInput, setFormAllenatoreInput] = useState("");
+  const [formLuogoInput, setFormLuogoInput] = useState("");
   const [weekDates, setWeekDates] = useState({});
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "asc" }); // Sorting state
   const [message, setMessage] = useState("");
@@ -358,6 +363,32 @@ function App() {
     setFormAllenatoreInput("");
   };
 
+  const handleFormLuogoSubmit = (e) => {
+    e.preventDefault();
+
+    // Ensure name is not empty
+    if (formLuogoInput.trim() === "") return;
+
+    // Update the data state
+    setData((prevData) => {
+      const updatedDay = { ...prevData[activeTab] }; // Clone the active day
+
+      updatedDay.luogo = formLuogoInput;
+
+      const updatedData = {
+        ...prevData,
+        [activeTab]: updatedDay, // Update the active day
+      };
+
+      updateGiorniDocument(updatedData);
+
+      return updatedData;
+    });
+
+    // Reset the form input
+    setFormLuogoInput("");
+  };
+
    // Delete a record
   const handleDelete = (day, turnoName, nomeToDelete) => {
     const isConfirmed = window.confirm(
@@ -389,7 +420,7 @@ function App() {
     });
   };
 
-    // Suspend or resume a training turn
+  // Suspend or resume a training turn
   const handleSuspendToggle = async (day, turnoName) => {
     const enteredPassword = window.prompt(
       "Inserisci la password per sospendere l'allenamento:"
@@ -403,6 +434,36 @@ function App() {
         updatedDay.turni = updatedDay.turni.map((turno) => {
           if (turno.nome === turnoName) {
             return { ...turno, sospeso: !turno.sospeso }; // Toggle suspension
+          }
+          return turno;
+        });
+
+        const updatedData = {
+          ...prevData,
+          [day]: updatedDay,
+        };
+
+        updateGiorniDocument(updatedData);
+        return updatedData;
+      });
+    } else {
+      alert("Password sbagliata, impossibile procedere");
+    }
+  };
+
+  const handleReserveToggle = async (day, turnoName) => {
+    const enteredPassword = window.prompt(
+      "Inserisci la password per riservare l'allenamento agli iscritti fitarco:"
+    );
+
+    const adminpassword = await fetchPassword("adminpassword");
+
+    if (enteredPassword === adminpassword) {
+      setData((prevData) => {
+        const updatedDay = { ...prevData[day] };
+        updatedDay.turni = updatedDay.turni.map((turno) => {
+          if (turno.nome === turnoName) {
+            return { ...turno, riservato: !turno.riservato }; // Toggle suspension
           }
           return turno;
         });
@@ -582,21 +643,31 @@ function App() {
         </div>
 
         <section className="booking-section">
-          <h2>Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong></h2>
+          <h2><font size="5">Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
+          <br />
           {data[activeTab].turni.map((turno) => (
             <div key={turno.nome} className="turno-section">
-              <h3><strong>{turno.nome}</strong></h3>
+              <h2><strong>{turno.nome}</strong></h2>
               <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
               <p>Allenatore: <strong>{turno.allenatore}</strong></p>
-              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"red"}}>Sospeso</font> : "Attivo"}</strong></p>
+              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
+              {turno.riservato ? <p><strong><font style={{color:"#990000"}}>Riservato SOLO ISCRITTI FITARCO</font></strong></p> : ""}
               <div className="turno-controls">
                 {/* Toggle Suspension */}
-                <button
-                  className={`suspend-button ${turno.sospeso ? "resume" : "suspend"}`}
-                  onClick={() => handleSuspendToggle(activeTab, turno.nome)}
-                >
-                  {turno.sospeso ? "Riprendi Allenamento" : "Sospendi Allenamento"}
-                </button>
+                <div>
+                  <button
+                    className={`suspend-button ${turno.riservato ? "resume" : "suspend"}`}
+                    onClick={() => handleReserveToggle(activeTab, turno.nome)}
+                  >
+                    {turno.riservato ? "Allenamento Libero" : "Riserva Allenamento FITARCO"}
+                  </button>
+                  <button
+                    className={`suspend-button ${turno.sospeso ? "resume" : "suspend"}`}
+                    onClick={() => handleSuspendToggle(activeTab, turno.nome)}
+                  >
+                    {turno.sospeso ? "Riprendi Allenamento" : "Sospendi Allenamento"}
+                  </button>
+                </div>
 
                 {/* Update Available Spots */}
                 <div className="posti-controls">
@@ -662,7 +733,7 @@ function App() {
 
         {/* Form Section */}
         <section className="form-section">
-          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1>
+          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1> <br />
           <form className="booking-form">
             <select
               value={formInput.turno}
@@ -688,7 +759,7 @@ function App() {
         </section>
 
         <section className="form-section">
-          <h1>Imposta Allenatore per il giorno selezionato</h1>
+          <h1>Imposta Allenatore per il giorno selezionato</h1> <br />
           <form className="booking-form">
             <input
                 type="text"
@@ -704,7 +775,23 @@ function App() {
         </section>
 
         <section className="form-section">
-          <h1>Attiva/Disattiva popup avvisi</h1>
+          <h1>Imposta Luogo per il giorno selezionato</h1> <br />
+          <form className="booking-form">
+            <input
+                type="text"
+                placeholder="Inserisci il luogo dell'allenamento"
+                value={formLuogoInput}
+                onChange={(e) => setFormLuogoInput(e.target.value)}
+                required
+              />
+            <button type="submit" className="primary-button" onClick={handleFormLuogoSubmit}>
+              Cambia Luogo
+            </button>
+          </form>
+        </section>
+
+        <section className="form-section">
+          <h1>Attiva/Disattiva popup avvisi</h1> <br />
           <form className="booking-form">
             <input
                 type="text"
@@ -776,20 +863,21 @@ function App() {
         </div>
 
         <section className="booking-section">
-          <h2>Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong></h2>
+          <h2><font size="5">Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
+          <br />
           {data[activeTab].turni.map((turno) => (
             <div key={turno.nome} className="turno-section">
-              <h3><strong>{turno.nome}</strong></h3>
+              <h2><strong>{turno.nome}</strong></h2>
               <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
               <p>Allenatore: <strong>{turno.allenatore}</strong></p>
-              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"red"}}>Sospeso</font> : "Attivo"}</strong></p>
+              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
+              {turno.riservato ? <p><strong><font style={{color:"#990000"}}>Riservato SOLO ISCRITTI FITARCO</font></strong></p> : ""}
 
               {/* Booking Table */}
               <table className="booking-table">
                 <thead>
                   <tr>
                     <th>Nome Arciere</th>
-                    <th>Turno</th>
                     <th>Cancella Prenotazione</th>
                   </tr>
                 </thead>
@@ -797,7 +885,6 @@ function App() {
                   {turno.prenotazioni.map((prenotazione) => (
                     <tr key={prenotazione.nome}>
                       <td>{prenotazione.nome}</td>
-                      <td>{prenotazione.turno}</td>
                       <td>
                         <button
                           className="delete-button"
@@ -823,7 +910,7 @@ function App() {
 
         {/* Form Section */}
         <section className="form-section">
-          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1>
+          <h1>Prenota allenamento per <strong>{activeTab}</strong></h1> <br />
           <form className="booking-form">
             <select
               value={formInput.turno}
