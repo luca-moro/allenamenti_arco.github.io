@@ -850,63 +850,68 @@ function App() {
         </header>
 
         {/* Tabs Section */}
-        <div className="tabs">
-          {Object.keys(data).map((day) => (
-            <button
-              key={day}
-              className={`tab-button ${activeTab === day ? "active" : ""}`}
-              onClick={() => setActiveTab(day)}
-            >
-              {day + weekDates[day]}
-            </button>
-          ))}
+        <div className="tabbini">
+          <div className="tabs">
+            {Object.keys(data).map((day) => (
+              <button
+                key={day}
+                className={`tab-button ${activeTab === day ? "active" : ""}`}
+                onClick={() => setActiveTab(day)}
+              >
+                {day + weekDates[day]}
+              </button>
+            ))}
+          </div>
+          <div>
+            <h2><font size="5">Calendario del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
+          </div>
         </div>
 
-        <section className="booking-section">
-          <h2><font size="5">Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
-          <br />
+        <div className="Mecca">
           {data[activeTab].turni.map((turno) => (
-            <div key={turno.nome} className="turno-section">
-              <h2><strong>{turno.nome}</strong></h2>
-              <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
-              <p>Allenatore: <strong>{turno.allenatore}</strong></p>
-              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
-              {turno.riservato ? <p><strong><font style={{color:"#990000"}}>Riservato SOLO ISCRITTI FITARCO</font></strong></p> : ""}
+            <section className="booking-section">
+              <div key={turno.nome} className="turno-section">
+                <h2><strong>{turno.nome}</strong></h2>
+                <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
+                <p>Allenatore: <strong>{turno.allenatore}</strong></p>
+                <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
+                {turno.riservato ? <p><strong><font style={{color:"#990000"}}>SOLO ISCRITTI FITARCO</font></strong></p> : <br />}
 
-              {/* Booking Table */}
-              <table className="booking-table">
-                <thead>
-                  <tr>
-                    <th>Nome Arciere</th>
-                    <th>Cancella Prenotazione</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {turno.prenotazioni.map((prenotazione) => (
-                    <tr key={prenotazione.nome}>
-                      <td>{prenotazione.nome}</td>
-                      <td>
-                        <button
-                          className="delete-button"
-                          onClick={() =>
-                            handleDelete(activeTab, turno.nome, prenotazione.nome)
-                          }
-                        >
-                          X
-                        </button>
-                      </td>
+                {/* Booking Table */}
+                <table className="booking-table">
+                  <thead>
+                    <tr>
+                      <th>Nome Arciere</th>
+                      <th>Cancella Prenotazione</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {turno.prenotazioni.length === 0 && (
-                <p className="no-data">Nessun iscritto per {turno.nome}.</p>
-              )}
-              <h2></h2>
-              <h2></h2>
-            </div>
+                  </thead>
+                  <tbody>
+                    {turno.prenotazioni.map((prenotazione) => (
+                      <tr key={prenotazione.nome}>
+                        <td>{prenotazione.nome}</td>
+                        <td>
+                          <button
+                            className="delete-button"
+                            onClick={() =>
+                              handleDelete(activeTab, turno.nome, prenotazione.nome)
+                            }
+                          >
+                            X
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {turno.prenotazioni.length === 0 && (
+                  <p className="no-data">Nessun iscritto per {turno.nome}.</p>
+                )}
+                <h2></h2>
+                <h2></h2>
+              </div>
+            </section>
           ))}
-        </section>
+        </div>
 
         {/* Form Section */}
         <section className="form-section">

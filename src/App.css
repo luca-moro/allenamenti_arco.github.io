@@ -204,15 +204,14 @@ nav a:hover {
 .tabs {
   display: flex;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
   padding: 10px 0;
 }
 
 .tab-button {
   background: none;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 8px;
+  font-size: 14px;
   cursor: pointer;
   color: white;
 }
@@ -226,18 +225,35 @@ nav a:hover {
   color: #f6a200;
 }
 
+.tabbini {
+  display: grid;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 0;
+  color: white;
+}
+
+.Mecca {
+  gap: 5px;
+  width: 99%;
+  display: flex;
+  flex-direction: row;
+  margin: 5px auto;
+  font-size: clamp(12px, 2vw, 18px); /* Minimum 14px, maximum 18px, and scales dynamically */
+}
+
 /* Booking Section */
 .booking-section {
-  width: 90%;
+  width: 100%;
   margin: 5px auto;
   background-color: #f6a200;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 5px;
   border-radius: 10px;
 }
 
 .booking-section h2 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .booking-table {
@@ -247,7 +263,7 @@ nav a:hover {
 
 .booking-table th {
   text-align: center;
-  padding: 10px;
+  padding: 5px;
   border-bottom: 2px solid #f6a200;
 }
 
@@ -275,7 +291,7 @@ nav a:hover {
   color: white;
   border: none;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 10px;
   cursor: pointer;
   border-radius: 5px;
 }
@@ -286,7 +302,7 @@ nav a:hover {
 
 /* Form Section */
 .form-section {
-  width: 90%;
+  width: 99%;
   margin: 5px auto;
   background: #f6a200;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -296,7 +312,7 @@ nav a:hover {
 }
 
 .form-section h2 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .booking-form {
