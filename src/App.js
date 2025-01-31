@@ -630,106 +630,110 @@ function App() {
         </header>
 
         {/* Tabs Section */}
-        <div className="tabs">
-          {Object.keys(data).map((day) => (
-            <button
-              key={day}
-              className={`tab-button ${activeTab === day ? "active" : ""}`}
-              onClick={() => setActiveTab(day)}
-            >
-              {day + weekDates[day]}
-            </button>
-          ))}
+        <div className="tabbini">
+          <div className="tabs">
+            {Object.keys(data).map((day) => (
+              <button
+                key={day}
+                className={`tab-button ${activeTab === day ? "active" : ""}`}
+                onClick={() => setActiveTab(day)}
+              >
+                {day + weekDates[day]}
+              </button>
+            ))}
+          </div>
+          <div>
+            <h2><font size="5">Calendario del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
+          </div>
         </div>
 
-        <section className="booking-section">
-          <h2><font size="5">Calendario prenotazioni del <strong>{activeTab.toUpperCase()}</strong> a <strong>{data[activeTab].luogo.toUpperCase()}</strong></font></h2>
-          <br />
+        <div className="Mecca">
           {data[activeTab].turni.map((turno) => (
-            <div key={turno.nome} className="turno-section">
-              <h2><strong>{turno.nome}</strong></h2>
-              <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
-              <p>Allenatore: <strong>{turno.allenatore}</strong></p>
-              <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
-              {turno.riservato ? <p><strong><font style={{color:"#990000"}}>Riservato SOLO ISCRITTI FITARCO</font></strong></p> : ""}
-              <div className="turno-controls">
-                {/* Toggle Suspension */}
-                <div>
-                  <button
-                    className={`suspend-button ${turno.riservato ? "resume" : "suspend"}`}
-                    onClick={() => handleReserveToggle(activeTab, turno.nome)}
-                  >
-                    {turno.riservato ? "Allenamento Libero" : "Riserva Allenamento FITARCO"}
-                  </button>
-                  <button
-                    className={`suspend-button ${turno.sospeso ? "resume" : "suspend"}`}
-                    onClick={() => handleSuspendToggle(activeTab, turno.nome)}
-                  >
-                    {turno.sospeso ? "Riprendi Allenamento" : "Sospendi Allenamento"}
-                  </button>
-                </div>
+            <section className="booking-section">
+              <div key={turno.nome} className="turno-section">
+                <h2><strong>{turno.nome}</strong></h2>
+                <p>Posti disponibili: <strong>{postiRimasti(turno.posti, turno.prenotazioni.length)+"/"+turno.posti}</strong></p>
+                <p>Allenatore: <strong>{turno.allenatore}</strong></p>
+                <p>Stato: <strong>{turno.sospeso ? <font style={{color:"#990000"}}>Sospeso</font> : "Attivo"}</strong></p>
+                {turno.riservato ? <p><strong><font style={{color:"#990000"}}>SOLO ISCRITTI FITARCO</font></strong></p> : <br />}
 
-                {/* Update Available Spots */}
-                <div className="posti-controls">
+                <div className="turno-controls">
+                  {/* Toggle Suspension */}
                   <div>
                     <button
-                      onClick={() => handleUpdatePosti(activeTab, turno.nome, turno.posti - 1)}
-                      disabled={turno.posti <= 0}
+                      className={`suspend-button ${turno.riservato ? "resume" : "suspend"}`}
+                      onClick={() => handleReserveToggle(activeTab, turno.nome)}
                     >
-                      -
+                      {turno.riservato ? "Allenamento Libero" : "Riserva FITARCO"}
                     </button>
                     <button
-                      onClick={() => handleUpdatePosti(activeTab, turno.nome, turno.posti + 1)}
+                      className={`suspend-button ${turno.sospeso ? "resume" : "suspend"}`}
+                      onClick={() => handleSuspendToggle(activeTab, turno.nome)}
                     >
-                      +
+                      {turno.sospeso ? "Riprendi Allenamento" : "Sospendi Allenamento"}
                     </button>
                   </div>
-                  <div>
-                    <button className="delete-subs"
-                      onClick={() => handleDeleteAllSubs(activeTab, turno.nome)}
-                    >
-                      Cancella Iscritti
-                    </button>
+
+                  {/* Update Available Spots */}
+                  <div className="posti-controls">
+                    <div>
+                      <button
+                        onClick={() => handleUpdatePosti(activeTab, turno.nome, turno.posti - 1)}
+                        disabled={turno.posti <= 0}
+                      >
+                        -
+                      </button>
+                      <button
+                        onClick={() => handleUpdatePosti(activeTab, turno.nome, turno.posti + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div>
+                      <button className="delete-subs"
+                        onClick={() => handleDeleteAllSubs(activeTab, turno.nome)}
+                      >
+                        Cancella Iscritti
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Booking Table */}
-              <table className="booking-table">
-                <thead>
-                  <tr>
-                    <th>Nome Arciere</th>
-                    <th>Turno</th>
-                    <th>Cancella Prenotazione</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {turno.prenotazioni.map((prenotazione) => (
-                    <tr key={prenotazione.nome}>
-                      <td>{prenotazione.nome}</td>
-                      <td>{prenotazione.turno}</td>
-                      <td>
-                        <button
-                          className="delete-button"
-                          onClick={() =>
-                            handleDelete(activeTab, turno.nome, prenotazione.nome)
-                          }
-                        >
-                          X
-                        </button>
-                      </td>
+                {/* Booking Table */}
+                <table className="booking-table">
+                  <thead>
+                    <tr>
+                      <th>Nome Arciere</th>
+                      <th>Cancella Prenotazione</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {turno.prenotazioni.length === 0 && (
-                <p className="no-data">Nessun iscritto per {turno.nome}.</p>
-              )}
-              <h2></h2>
-              <h2></h2>
-            </div>
+                  </thead>
+                  <tbody>
+                    {turno.prenotazioni.map((prenotazione) => (
+                      <tr key={prenotazione.nome}>
+                        <td>{prenotazione.nome}</td>
+                        <td>
+                          <button
+                            className="delete-button"
+                            onClick={() =>
+                              handleDelete(activeTab, turno.nome, prenotazione.nome)
+                            }
+                          >
+                            X
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {turno.prenotazioni.length === 0 && (
+                  <p className="no-data">Nessun iscritto per {turno.nome}.</p>
+                )}
+                <h2></h2>
+                <h2></h2>
+              </div>
+            </section>
           ))}
-        </section>
+        </div>
 
         {/* Form Section */}
         <section className="form-section">
