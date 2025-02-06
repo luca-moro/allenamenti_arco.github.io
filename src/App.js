@@ -26,6 +26,19 @@ const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Firestore
 const db = getFirestore(firebaseApp);
 
+async function get_initial_data() {
+  const docRef = doc(db, 'giorni', '5h6XEaykZl2USUmmcb6U');
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return (JSON.parse(docSnap.data().campo));
+  } else {
+    console.log("No such document!");
+  }
+};
+
+const initialData = get_initial_data();
+
+
 async function fetchGiorniDocument() {
   // Define a reference to the document
   const docRef = doc(db, 'giorni', '5h6XEaykZl2USUmmcb6U');
@@ -44,7 +57,7 @@ async function fetchGiorniDocument() {
     console.error("Error getting document:", error);
     return null;
   }
-}
+};
 
 async function updatePopup(newMessage, newEnabled) {
   // Reference the specific document you want to update
@@ -95,89 +108,6 @@ interface Giorno {
   }[];
 }
 
-const initialData = {
-	"Lunedì": {
-		"nome": "Lunedì",
-		"luogo": "Montefiore",
-		"turni": [
-			{
-				"nome": "Primo Turno",
-				"allenatore": "Mecca",
-				"posti": 10,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			},
-			{
-				"nome": "Secondo Turno",
-				"allenatore": "Mecca",
-				"posti": 12,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			}
-		]
-	},
-	"Mercoledì": {
-		"nome": "Mercoledì",
-		"luogo": "Morciano",
-		"turni": [
-			{
-				"nome": "Primo Turno",
-				"allenatore": "Palazzini",
-				"posti": 20,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			},
-			{
-				"nome": "Secondo Turno",
-				"allenatore": "Palazzini",
-				"posti": 12,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			}
-		]
-	},
-	"Giovedì": {
-		"nome": "Giovedì",
-		"luogo": "Morciano",
-		"turni": [
-			{
-				"nome": "Turno Unico",
-				"allenatore": "Ugo",
-				"posti": 9,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			}
-		]
-	},
-	"Sabato": {
-		"nome": "Sabato",
-		"luogo": "Morciano",
-		"turni": [
-			{
-				"nome": "Primo Turno",
-				"allenatore": "Palazzini ",
-				"posti": 20,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			},
-			{
-				"nome": "Secondo Turno",
-				"allenatore": "Palazzini ",
-				"posti": 20,
-				"prenotazioni": [],
-				"sospeso": false,
-				"riservato": false
-			}
-		]
-	}
-};
-
 //const adminpassword = "LUCA"; // Define the correct password here
 async function fetchPassword(docId) {
   const docRef = doc(db, 'giorni', docId);
@@ -195,7 +125,7 @@ async function fetchPassword(docId) {
     console.error("Error getting document:", error);
     return null;
   }
-}
+};
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
