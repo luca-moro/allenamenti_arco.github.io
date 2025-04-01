@@ -553,7 +553,8 @@ function App() {
             ☰
           </button>
           <nav className={`navbar-menu ${isMenuOpen ? "open" : ""}`}>
-            <a href="Segnapunti_10_vole.pdf" download="Segnapunti_10_vole.pdf">Download File Segnapunti</a>
+            <a href="Segnapunti_10_vole.pdf" download="Segnapunti_10_vole.pdf">Download Segnapunti Indoor</a>
+            <a href="Segnapunti_12_vole_72_frecce.pdf" download="Segnapunti_12_vole_72_frecce.pdf">Download Segnapunti Outdoor</a>
             <a href="https://docs.google.com/spreadsheets/d/11_P5Tp79USRnDzy4NDw_2u3zsvyeaU33LsEISs46uKs/edit?gid=0#gid=0" target="_blank">Calendario Tecnici</a>
             <a href="https://docs.google.com/spreadsheets/d/1eO8TQW-4I0wmI7VCpdxiNsQRAAzB5lsx/edit?gid=1333899302#gid=1333899302" target="_blank">File Gare</a>
           </nav>
@@ -777,7 +778,8 @@ function App() {
             ☰
           </button>
           <nav className={`navbar-menu ${isMenuOpen ? "open" : ""}`}>
-            <a href="Segnapunti_10_vole.pdf" download="Segnapunti_10_vole.pdf">Download File Segnapunti</a>
+            <a href="Segnapunti_10_vole.pdf" download="Segnapunti_10_vole.pdf">Download Segnapunti Indoor</a>
+            <a href="Segnapunti_12_vole_72_frecce.pdf" download="Segnapunti_12_vole_72_frecce.pdf">Download Segnapunti Outdoor</a>
             <a href="https://docs.google.com/spreadsheets/d/11_P5Tp79USRnDzy4NDw_2u3zsvyeaU33LsEISs46uKs/edit?gid=0#gid=0" target="_blank">Calendario Tecnici</a>
             <a href="https://docs.google.com/spreadsheets/d/1eO8TQW-4I0wmI7VCpdxiNsQRAAzB5lsx/edit?gid=1333899302#gid=1333899302" target="_blank">File Gare</a>
           </nav>
