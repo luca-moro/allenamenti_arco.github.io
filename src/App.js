@@ -155,7 +155,7 @@ function App() {
 
   const [data, setData] = useState(initialData);
   const [activeTab, setActiveTab] = useState('Lunedì');
-  const [formInput, setFormInput] = useState({turno: "Primo Turno", nome: "" });
+  const [formInput, setFormInput] = useState({turno: "Turno Unico", nome: "" });
   const [formAllenatoreInput, setFormAllenatoreInput] = useState("");
   const [formLuogoInput, setFormLuogoInput] = useState("");
   const [weekDates, setWeekDates] = useState({});
@@ -169,7 +169,7 @@ function App() {
     if (activeTab === "Giovedì") {
       setFormInput((prev) => ({ ...prev, turno: "Turno Unico" }));
     } else {
-      setFormInput((prev) => ({ ...prev, turno: "Primo Turno" }));
+      setFormInput((prev) => ({ ...prev, turno: "Turno Unico" }));
     }
   }, [activeTab]); // Runs whenever `activeTab` changes
 
@@ -258,7 +258,7 @@ function App() {
     });
 
     // Reset the form input
-    setFormInput({ turno: "Primo Turno", nome: "" });
+    setFormInput({ turno: "Turno Unico", nome: "" });
   };
 
   // Handle form Allenatore submission
