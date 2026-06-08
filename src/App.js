@@ -166,7 +166,7 @@ function App() {
 
   // Update the default value of `formInput.turno` based on `activeTab`
   useEffect(() => {
-    if (activeTab === "Giovedì") {
+    if (activeTab === "Giovedì" || activeTab === "Lunedì" || activeTab === "Mercoledì") {
       setFormInput((prev) => ({ ...prev, turno: "Turno Unico" }));
     } else {
       setFormInput((prev) => ({ ...prev, turno: "Primo Turno" }));
