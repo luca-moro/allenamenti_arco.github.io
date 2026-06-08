@@ -259,7 +259,7 @@ function App() {
 
     // Reset the form input
 //    setFormInput({ turno: "Turno Unico", nome: "" });
-    if (activeTab === "Giovedì") {
+    if (activeTab === "Giovedì" || activeTab === "Lunedì" || activeTab === "Mercoledì") {
       setFormInput((prev) => ({ ...prev, turno: "Turno Unico", nome: "" }));
     } else {
       setFormInput((prev) => ({ ...prev, turno: "Primo Turno", nome: "" }));
